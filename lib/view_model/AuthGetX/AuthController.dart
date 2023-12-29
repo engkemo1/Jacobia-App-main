@@ -62,7 +62,7 @@ class AuthController extends GetxController {
           ? await CacheHelper.sharedPreferences.setStringList('enrolled', l)
           :await CacheHelper.sharedPreferences.setStringList('enrolled', h);
 
-      Get.defaultDialog(content: const Text('Enrolled'), title: '');
+      Get.defaultDialog(content: const Text('Enrolled',style: TextStyle(color: Colors.white),), title: '',backgroundColor: Colors.black);
       update();
     });
   }

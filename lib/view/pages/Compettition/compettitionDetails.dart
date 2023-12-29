@@ -62,6 +62,37 @@ class CompettitionDetails extends StatefulWidget {
 class _CompettitionDetailsState extends State<CompettitionDetails> {
   int _index = 0;
   var enroll = Get.put(EnrollGetX());
+  bool isEnrolled = false;
+  Enrolled()async{
+
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(CacheHelper.get(key: 'uid'))
+        .collection("enrolled_quiz")
+        .doc(widget.docId)
+        .get().then((value) {
+      if(value.exists){
+setState(() {
+  isEnrolled=true;
+
+});
+      }else{
+        setState(() {
+          isEnrolled=false;
+
+        });
+
+      }
+    });
+    print(isEnrolled);
+  }
+
+  @override
+  void initState() {
+    Enrolled();
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   @override
@@ -309,15 +340,15 @@ class _CompettitionDetailsState extends State<CompettitionDetails> {
                                       ),
                                     ),
                                     Divider(),
-
                                     SizedBox(
                                       height: 20,
                                     ),
                                     DataTable(
                                       columnSpacing: 20,
-                                      headingTextStyle:
-                                          TextStyle(color: primaryColor,fontSize: 10),
-                                      dataTextStyle:  TextStyle(color: Colors.white,fontSize: 10),
+                                      headingTextStyle: TextStyle(
+                                          color: primaryColor, fontSize: 10),
+                                      dataTextStyle: TextStyle(
+                                          color: Colors.white, fontSize: 10),
                                       headingRowColor:
                                           MaterialStateProperty.all(
                                               Colors.white),
@@ -330,10 +361,7 @@ class _CompettitionDetailsState extends State<CompettitionDetails> {
                                           DataCell(Text("${widget.r3}%")),
                                           DataCell(Text("${widget.r4}%")),
                                           DataCell(Text("${widget.r5}%")),
-
                                         ]),
-
-
                                       ],
                                       columns: const [
                                         DataColumn(
@@ -368,34 +396,27 @@ class _CompettitionDetailsState extends State<CompettitionDetails> {
                                             textAlign: TextAlign.center,
                                           ),
                                         ),
-
                                       ],
                                     ),
                                     DataTable(
                                       columnSpacing: 20,
-                                      headingTextStyle:
-                                      TextStyle(color: primaryColor,fontSize: 10),
-                                      dataTextStyle:  TextStyle(color: Colors.white,fontSize: 10),
+                                      headingTextStyle: TextStyle(
+                                          color: primaryColor, fontSize: 10),
+                                      dataTextStyle: TextStyle(
+                                          color: Colors.white, fontSize: 10),
                                       headingRowColor:
-                                      MaterialStateProperty.all(
-                                          Colors.white),
+                                          MaterialStateProperty.all(
+                                              Colors.white),
                                       border:
-                                      TableBorder.all(color: Colors.black),
+                                          TableBorder.all(color: Colors.black),
                                       rows: [
-
-                                          DataRow(cells: [
-                                            DataCell(Text("${widget.r6}%")),
-                                            DataCell(Text("${widget.r7}%")),
-                                            DataCell(Text("${widget.r8}%")),
-                                            DataCell(Text("${widget.r9}%")),
-                                            DataCell(Text("${widget.r10}%")),
-
-                                          ]),
-
-
-
-
-
+                                        DataRow(cells: [
+                                          DataCell(Text("${widget.r6}%")),
+                                          DataCell(Text("${widget.r7}%")),
+                                          DataCell(Text("${widget.r8}%")),
+                                          DataCell(Text("${widget.r9}%")),
+                                          DataCell(Text("${widget.r10}%")),
+                                        ]),
                                       ],
                                       columns: const [
                                         DataColumn(
@@ -428,10 +449,8 @@ class _CompettitionDetailsState extends State<CompettitionDetails> {
                                             textAlign: TextAlign.center,
                                           ),
                                         ),
-
                                       ],
                                     ),
-
                                   ],
                                 )
                               ],
@@ -516,7 +535,7 @@ class _CompettitionDetailsState extends State<CompettitionDetails> {
                                 ),
                               )),
                           Center(
-                              child: !list.contains(widget.docId)
+                              child: isEnrolled == false
                                   ? ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                           backgroundColor:
@@ -559,9 +578,13 @@ class _CompettitionDetailsState extends State<CompettitionDetails> {
                                                                 widget.price,
                                                                 widget.name,
                                                                 widget.docId)
-                                                            .then((value) =>
-                                                                setState(
-                                                                    () {}));
+                                                            .then((value) {
+                                                          if (value == true) {
+                                                            setState(() {
+                                                              isEnrolled = true;
+                                                            });
+                                                          }
+                                                        });
 
                                                         Navigator.pop(context);
                                                       }),
@@ -586,7 +609,7 @@ class _CompettitionDetailsState extends State<CompettitionDetails> {
                                   : ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                           backgroundColor:
-                                              dateNow.isAfter(startDate)
+                                              dateNow.isBefore(startDate)
                                                   ? Colors.grey
                                                   : Colors.black38,
                                           maximumSize: Size(200, 100),
@@ -601,6 +624,8 @@ class _CompettitionDetailsState extends State<CompettitionDetails> {
                                             bool isJoined = false;
                                             await FirebaseFirestore.instance
                                                 .collection(widget.name)
+                                                .doc()
+                                                .collection('enrolled')
                                                 .doc(
                                                     CacheHelper.get(key: 'uid'))
                                                 .get()

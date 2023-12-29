@@ -7,11 +7,27 @@ import '../../../constants.dart';
 import '../../../view_model/AuthGetX/AuthController.dart';
 import 'Signup.dart';
 
-class SignIn extends StatelessWidget {
+class SignIn extends StatefulWidget {
+  @override
+  State<SignIn> createState() => _SignInState();
+}
+
+class _SignInState extends State<SignIn> {
   final TextEditingController emailController = TextEditingController();
+
   final TextEditingController passController = TextEditingController();
+
   var controller = Get.put(AuthController());
+
   final _formKey = GlobalKey<FormState>();
+
+  bool  _passwordVisible=false;
+  @override
+  void initState() {
+    _passwordVisible=false;
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,11 +113,13 @@ class SignIn extends StatelessWidget {
                               validator: (val) {
                                 validateEmail(val!);
                               },
+
                               autovalidateMode: AutovalidateMode.always,
                               controller: emailController,
                               style: TextStyle(fontSize: 15),
                               textAlign: TextAlign.end,
                               decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.email_outlined, size: 24),
                                 contentPadding:
                                     EdgeInsets.symmetric(horizontal: 10),
                                 border: InputBorder.none,
@@ -122,10 +140,27 @@ class SignIn extends StatelessWidget {
                               validator: (val) {
                                 validatePassword(val!);
                               },
-                              obscureText: true,
+                              obscureText: _passwordVisible,
+
                               controller: passController,
                               textAlign: TextAlign.end,
                               decoration: InputDecoration(
+                                  prefixIcon: Icon(Icons.lock_rounded, size: 24),
+                                  prefix: IconButton(
+                                    icon: Icon(
+                                      // Based on passwordVisible state choose the icon
+                                      _passwordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: Theme.of(context).primaryColorDark,
+                                    ),
+                                    onPressed: () {
+                                      // Update the state i.e. toogle the state of passwordVisible variable
+                                      setState(() {
+                                        _passwordVisible = !_passwordVisible;
+                                      });
+                                    },
+                                  ),
                                   contentPadding:
                                       EdgeInsets.symmetric(horizontal: 10),
                                   border: InputBorder.none,

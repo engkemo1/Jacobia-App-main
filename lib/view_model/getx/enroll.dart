@@ -7,20 +7,29 @@ import '../AuthGetX/AuthController.dart';
 import '../database/local/cache_helper.dart';
 
 class EnrollGetX extends GetxController {
+
+
   Future enroll(String typeCoins, int price, String name, String docId) async {
+    bool enrolled=false;
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(CacheHelper.get(key: 'uid')).get().then((value) async{
     if (typeCoins == 'yellowCoins' &&
-            price > CacheHelper.get(key: 'yellowCoins') ||
-        typeCoins == 'redCoins' && price > CacheHelper.get(key: 'redCoins') ||
+            price > value.get("yellowCoins") ||
+        typeCoins == 'redCoins' && price >value.get("redCoins")  ||
         typeCoins == 'greenCoins' &&
-            price > CacheHelper.get(key: 'greenCoins')) {
+            price > value.get("greenCoins") ) {
+      enrolled=false;
       Get.snackbar('!تنبيه', 'ليس معك نقود كافية للاشتراك');
     } else {
 
+      enrolled=true;
 
       await FirebaseFirestore.instance
           .collection('users')
           .doc(CacheHelper.get(key: 'uid'))
-          .update({typeCoins: CacheHelper.get(key: typeCoins) - price});
+          .update({typeCoins: value.get(typeCoins) - price});
 
       await FirebaseFirestore.instance
           .collection(name)
@@ -42,7 +51,11 @@ class EnrollGetX extends GetxController {
 
       Get.put(AuthController().enrolledQuiz(docId));
     }
+
+    });
     update();
+    print(enrolled);
+    return enrolled;
   }
 
   onBeginQuiz(String name,String typeCoins ,String docId,var r1,var r2,var r3,var r4,var r5,var r6,var r7,var r8,var r9,var r10) {

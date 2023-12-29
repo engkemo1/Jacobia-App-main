@@ -11,9 +11,9 @@ class CodesGetX extends GetxController with SingleGetTickerProviderMixin {
   var docid;
 
   double? red, yellow, green;
-  String typeCoins='none';
+  String typeCoins = 'none';
   int? withdrawal;
-   TextEditingController priceController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
   TextEditingController codeController = TextEditingController();
 
   // getCode(int code) async {
@@ -35,13 +35,14 @@ class CodesGetX extends GetxController with SingleGetTickerProviderMixin {
   @override
   void onInit() {
     // TODO: implement onInit
-      super.onInit();
+    super.onInit();
   }
-void delete(String id)async{
 
- await FirebaseFirestore.instance.collection('quiz').doc(id).delete();
-update();
-}
+  void delete(String id) async {
+    await FirebaseFirestore.instance.collection('quiz').doc(id).delete();
+    update();
+  }
+
   updateApplied(
     bool applied,
   ) async {
@@ -51,8 +52,7 @@ update();
         .update({'isApplied': applied});
   }
 
-   checkCode(BuildContext context) async {
-
+  checkCode(BuildContext context) async {
     List<Code> codeList = [];
     var codes = FirebaseFirestore.instance
         .collection('codes')
@@ -78,9 +78,11 @@ update();
               .collection('users')
               .doc(CacheHelper.get(key: 'uid'))
               .update({
-            'redCoins': element.typeCoins == 'redCoins' ? red + element.price! : red,
-            'greenCoins':
-                element.typeCoins == 'greenCoins' ? green + element.price! : green,
+            'redCoins':
+                element.typeCoins == 'redCoins' ? red + element.price! : red,
+            'greenCoins': element.typeCoins == 'greenCoins'
+                ? green + element.price!
+                : green,
             'yellowCoins': element.typeCoins == 'yellowCoins'
                 ? yellow + element.price!
                 : yellow,
@@ -92,7 +94,7 @@ update();
                 ? CacheHelper.put(
                     key: 'greenCoins', value: green + element.price!)
                 : red;
-             element.typeCoins == 'yellowCoins'
+            element.typeCoins == 'yellowCoins'
                 ? CacheHelper.put(
                     key: 'yellowCoins', value: yellow + element.price!)
                 : red;
@@ -101,12 +103,11 @@ update();
 
           updateApplied(true);
 
-          Get.defaultDialog(title: '', content: Text('تمت العمليه بنجاح')).then((value) {
+          Get.defaultDialog(title: '', content: Text('تمت العمليه بنجاح'))
+              .then((value) {
             Get.back();
             Get.back();
             priceController.clear();
-
-
           });
         } else {
           Get.defaultDialog(title: '', content: Text('الكود غير صحيح'));
@@ -116,17 +117,25 @@ update();
       Get.defaultDialog(title: '', content: Text('الكود غير صحيح'));
   }
 
-  request()async{
-  await  FirebaseFirestore.instance.collection('requests').doc(CacheHelper.get(key: 'uid')).set({
-      'name':CacheHelper.get(key: 'name'),
-      'phone':CacheHelper.get(key: 'phone'),
-      'uid':CacheHelper.get(key: 'uid'),
-       'withdrawal':priceController.text,
-    'typeCoins':typeCoins,
-    'redCoins':CacheHelper.get(key: 'redCoins'),
-    'greenCoins':CacheHelper.get(key: 'greenCoins'),
-    'yellowCoins':CacheHelper.get(key: 'yellowCoins'),
+  request() async {
+    priceController.clear();
 
-    }).then((value) => Get.snackbar('كيف حالك', 'لقد تم ارسال الطلب في انتظار الموافقه',duration: Duration(seconds: 5)));
+    await FirebaseFirestore.instance
+        .collection('requests')
+        .doc()
+        .set({
+      'name': CacheHelper.get(key: 'name'),
+      'phone': CacheHelper.get(key: 'phone'),
+      'uid': CacheHelper.get(key: 'uid'),
+      'withdrawal': priceController.text,
+      'typeCoins': typeCoins,
+      'redCoins': CacheHelper.get(key: 'redCoins'),
+      'greenCoins': CacheHelper.get(key: 'greenCoins'),
+      'yellowCoins': CacheHelper.get(key: 'yellowCoins'),
+    }).then((value) {
+      Get.snackbar(
+          '                              كيف حالك', '                 لقد تم ارسال الطلب في انتظار الموافقه',
+          duration: Duration(seconds: 5),);
+    });
   }
 }

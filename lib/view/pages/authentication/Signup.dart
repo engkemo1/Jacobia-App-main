@@ -28,6 +28,8 @@ class _SignUpState extends State<SignUp> {
 
   var controller = Get.put(AuthController());
 
+  bool _passwordVisible=false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,8 +158,23 @@ class _SignUpState extends State<SignUp> {
                                 style: TextStyle(color: Colors.grey,fontWeight: FontWeight.normal),
 
                                 textAlign: TextAlign.end,
-                                obscureText: true,
+                                obscureText: _passwordVisible,
                                 decoration: InputDecoration(
+                                    prefix: IconButton(
+                                      icon: Icon(
+                                        // Based on passwordVisible state choose the icon
+                                        _passwordVisible
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                        color: Theme.of(context).primaryColorDark,
+                                      ),
+                                      onPressed: () {
+                                        // Update the state i.e. toogle the state of passwordVisible variable
+                                        setState(() {
+                                          _passwordVisible = !_passwordVisible;
+                                        });
+                                      },
+                                    ),
                                     contentPadding:
                                         EdgeInsets.symmetric(horizontal: 10),
                                     border: InputBorder.none,
