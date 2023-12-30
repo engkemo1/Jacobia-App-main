@@ -9,7 +9,7 @@ import '../database/local/cache_helper.dart';
 class EnrollGetX extends GetxController {
 
 
-  Future enroll(String typeCoins, int price, String name, String docId) async {
+  Future enroll(String typeCoins, double price, String name, String docId) async {
     bool enrolled=false;
 
     await FirebaseFirestore.instance

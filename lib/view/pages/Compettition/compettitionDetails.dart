@@ -19,8 +19,8 @@ class CompettitionDetails extends StatefulWidget {
   final String typeCoins;
   final int max;
   final int min;
-  final int price;
-  final int profit;
+  final double price;
+  final double profit;
   final String name;
   final String endTime;
   final String startTime;

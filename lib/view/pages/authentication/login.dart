@@ -119,6 +119,22 @@ class _SignInState extends State<SignIn> {
                               style: TextStyle(fontSize: 15),
                               textAlign: TextAlign.end,
                               decoration: InputDecoration(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                 prefixIcon: Icon(Icons.email_outlined, size: 24),
                                 contentPadding:
                                     EdgeInsets.symmetric(horizontal: 10),

@@ -26,11 +26,13 @@ class AuthController extends GetxController {
   User? get userProfile => auth.currentUser;
   bool enrolled = false;
   String? emailq;
-@override
+
+  @override
   void onInit() {
-  getCoins();
+    getCoins();
     super.onInit();
   }
+
   void onReady() {
     super.onReady();
     _user = Rx<User?>(auth.currentUser);
@@ -55,31 +57,35 @@ class AuthController extends GetxController {
         .collection('enrolled_quiz')
         .doc(docId)
         .set({'id': docId}).then((value) async {
-     var h=CacheHelper.sharedPreferences.getStringList('enrolled')?? [];
-     var t=h.add(docId);
+      var h = CacheHelper.sharedPreferences.getStringList('enrolled') ?? [];
+      var t = h.add(docId);
       l.add(docId);
-      CacheHelper.get(key:'enrolled') == null
+      CacheHelper.get(key: 'enrolled') == null
           ? await CacheHelper.sharedPreferences.setStringList('enrolled', l)
-          :await CacheHelper.sharedPreferences.setStringList('enrolled', h);
+          : await CacheHelper.sharedPreferences.setStringList('enrolled', h);
 
-      Get.defaultDialog(content: const Text('Enrolled',style: TextStyle(color: Colors.white),), title: '',backgroundColor: Colors.black);
+      Get.defaultDialog(
+          content: const Text(
+            'Enrolled',
+            style: TextStyle(color: Colors.white),
+          ),
+          title: '',
+          backgroundColor: Colors.black);
       update();
     });
   }
 
-  getCoins(){
-  var docs=  FirebaseFirestore.instance.collection('users').doc(CacheHelper.get(key: 'uid'));
+  getCoins() {
+    var docs = FirebaseFirestore.instance
+        .collection('users')
+        .doc(CacheHelper.get(key: 'uid'));
 
-    docs.get().then((value) async{
-
+    docs.get().then((value) async {
       CacheHelper.put(key: 'redCoins', value: value.get('redCoins'));
       CacheHelper.put(key: 'greenCoins', value: value.get('greenCoins'));
       CacheHelper.put(key: 'yellowCoins', value: value.get('yellowCoins'));
       CacheHelper.put(key: 'uid', value: value.get('uid'));
-
     });
-
-
   }
 
   void registerUser(String username, String email, String password,
@@ -93,7 +99,7 @@ class AuthController extends GetxController {
       emailq = email;
       // String downloadUrl = await _uploadToStorage(image);
       UserModel user = UserModel(
-        pass: password,
+          pass: password,
           name: username,
           email: email,
           uid: cred.user!.uid,
@@ -126,7 +132,7 @@ class AuthController extends GetxController {
     CacheHelper.put(key: 'name', value: user.name!);
     CacheHelper.put(key: 'email', value: user.email!);
     CacheHelper.put(key: 'phone', value: user.phone!);
-    CacheHelper.put(key: 'nationality', value: user.nationality!);
+    CacheHelper.put(key: 'nationality', value: user.nationality??"");
     CacheHelper.put(key: 'password', value: user.pass!);
     CacheHelper.put(key: 'imageUrl', value: user.profilePhoto!);
     CacheHelper.put(key: 'address', value: user.address!);
@@ -171,13 +177,13 @@ class AuthController extends GetxController {
           phone: result.get('phone'),
           address: result.get('address'),
           nick: result.get('nick'),
-          profilePhoto: result.get('profilePhoto'),
+          profilePhoto: result.get('imageUrl'),
           redCoins: result.get('redCoins'),
           yellowCoins: result.get('yellowCoins'),
           greenCoins: result.get('greenCoins'),
         );
 
-        print(result.id);
+        print(user);
         _saveUser(user);
       }
     });
@@ -213,9 +219,8 @@ class AuthController extends GetxController {
 
   void signout() async {
     try {
-      await auth.signOut();
+      await auth.signOut().then((value) => CacheHelper.clearData());
       isSignedIn.value = false;
-      CacheHelper.clearData();
 
       update();
       Get.offAll(() => SignIn());
