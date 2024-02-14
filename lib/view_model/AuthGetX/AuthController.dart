@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:jacobia/view/pages/authentication/login.dart';
 import 'package:jacobia/view_model/database/local/cache_helper.dart';
 import '../../model/UserModel.dart';
@@ -99,6 +100,7 @@ class AuthController extends GetxController {
       emailq = email;
       // String downloadUrl = await _uploadToStorage(image);
       UserModel user = UserModel(
+        date:DateFormat("yyyy-MM-dd").format(DateTime.now()) ,
           pass: password,
           name: username,
           email: email,
@@ -127,6 +129,7 @@ class AuthController extends GetxController {
 
   _saveUser(UserModel user) async {
     log("email: ${user.uid}");
+    CacheHelper.put(key: 'date', value: user.date!);
 
     CacheHelper.put(key: 'uid', value: user.uid!);
     CacheHelper.put(key: 'name', value: user.name!);
@@ -170,12 +173,14 @@ class AuthController extends GetxController {
         .then((value) {
       for (var result in value.docs) {
         UserModel user = UserModel(
+          date:result.get('password') ,
           pass: result.get('password'),
           uid: result.id,
           email: result.get('email'),
           name: result.get('name'),
           phone: result.get('phone'),
           address: result.get('address'),
+
           nick: result.get('nick'),
           profilePhoto: result.get('imageUrl'),
           redCoins: result.get('redCoins'),

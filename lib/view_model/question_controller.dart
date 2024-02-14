@@ -28,7 +28,6 @@ class QuestionController extends GetxController
     var optionsSnapshot = question.docs.forEach((element) {
       options.add(Option.fromJson(element.data() as Map<String, dynamic>));
     });
-    print('ddddddddddddddddddddddddddddddddddddddddddddddddddddd');
     print(options);
     return optionsSnapshot;
   }

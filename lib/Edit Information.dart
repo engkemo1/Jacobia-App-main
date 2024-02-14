@@ -62,6 +62,18 @@ class _EditInfoState extends State<EditInfo> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Container(
+                padding: EdgeInsets.all(10),
+                height: 50,width: double.infinity,color: Colors.black.withOpacity(0.5),child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("${CacheHelper.get(key: "date")}",style: TextStyle(color: Colors.white,fontSize: 18),),
+
+                  Text(":تاريخ انشاء الحساب",style: TextStyle(color: Colors.white,fontSize: 18),),
+
+                ],
+              ),),
+
               SizedBox(
                 height: 40,
               ),
