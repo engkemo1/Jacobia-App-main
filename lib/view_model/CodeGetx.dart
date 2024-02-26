@@ -12,7 +12,7 @@ class CodesGetX extends GetxController with SingleGetTickerProviderMixin {
 
   double? red, yellow, green;
   String typeCoins = 'none';
-  int? withdrawal;
+  double? withdrawal;
   TextEditingController priceController = TextEditingController();
   TextEditingController codeController = TextEditingController();
 
@@ -118,7 +118,6 @@ class CodesGetX extends GetxController with SingleGetTickerProviderMixin {
   }
 
   request() async {
-    priceController.clear();
 
     await FirebaseFirestore.instance
         .collection('requests')
@@ -127,12 +126,13 @@ class CodesGetX extends GetxController with SingleGetTickerProviderMixin {
       'name': CacheHelper.get(key: 'name'),
       'phone': CacheHelper.get(key: 'phone'),
       'uid': CacheHelper.get(key: 'uid'),
-      'withdrawal': priceController.text,
+      'withdrawal':double.tryParse(priceController.text),
       'typeCoins': typeCoins,
       'redCoins': CacheHelper.get(key: 'redCoins'),
       'greenCoins': CacheHelper.get(key: 'greenCoins'),
       'yellowCoins': CacheHelper.get(key: 'yellowCoins'),
     }).then((value) {
+      Get.back();
       Get.snackbar(
           '                              كيف حالك', '                 لقد تم ارسال الطلب في انتظار الموافقه',
           duration: Duration(seconds: 5),);

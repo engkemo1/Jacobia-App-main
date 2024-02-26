@@ -49,7 +49,6 @@ dependencies:
   shimmer: ^2.0.0
   flutter_countdown_timer: ^4.1.0
   get:
-
   cupertino_icons: ^1.0.2
   websafe_svg: ^2.1.1
   confetti: ^0.6.0
