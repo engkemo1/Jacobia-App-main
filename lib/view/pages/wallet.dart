@@ -288,14 +288,14 @@ class Wallet extends GetView<CodesGetX> {
                                         });
                                   },
                                   child:
-                                      Image.asset('assets/icons/deposit.jpeg'),
+                                      Image.asset('assets/images/a (1).png'),
                                 )),
                             SizedBox(
                               width: we * 0.03,
                             ),
                             iconswidget(
                                 title: "سحب",
-                                color: const Color(0xFF411C2E),
+                                color:Colors.transparent,
                                 delayanimation: 1.9,
                                 child: InkWell(
                                   onTap: () {
@@ -400,7 +400,7 @@ class Wallet extends GetView<CodesGetX> {
                                                           child: Text('Save'),
                                                           style: ElevatedButton
                                                               .styleFrom(
-                                                                  primary: Colors
+                                                                  backgroundColor: Colors
                                                                       .greenAccent),
                                                         ),
                                                       )
@@ -411,7 +411,7 @@ class Wallet extends GetView<CodesGetX> {
                                         });
                                   },
                                   child: Image.asset(
-                                      'assets/icons/withdaraw.jpeg'),
+                                      'assets/images/c.png'),
                                 )),
                             SizedBox(width: we * 0.03),
                           ],

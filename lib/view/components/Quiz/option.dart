@@ -5,14 +5,16 @@ import '../../../constants.dart';
 import '../../../view_model/question_controller.dart';
 
 class Options extends StatelessWidget {
-   Options({
+  Options({
     required this.text,
     required this.index,
     required this.press,
-  }) ;
+  });
+
   final int index;
   final VoidCallback press;
-final String text;
+  final String text;
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<QuestionController>(
@@ -35,9 +37,8 @@ final String text;
           }
 
           return InkWell(
-            onTap: press,
+            onTap: press, // Trigger the answer check on press
             child: Container(
-
               margin: EdgeInsets.only(top: kDefaultPadding),
               padding: EdgeInsets.all(kDefaultPadding),
               decoration: BoxDecoration(
@@ -48,11 +49,10 @@ final String text;
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
-
                     child: Text(
                       "${index + 1}. $text",
-                      style: TextStyle(color: Colors.white, fontSize: 16, ),softWrap:true ,
-
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                      softWrap: true,
                     ),
                   ),
                   Container(
@@ -68,7 +68,7 @@ final String text;
                     child: getTheRightColor() == Colors.grey
                         ? null
                         : Icon(getTheRightIcon(), size: 16),
-                  )
+                  ),
                 ],
               ),
             ),

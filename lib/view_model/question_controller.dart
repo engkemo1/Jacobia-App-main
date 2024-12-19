@@ -10,7 +10,7 @@ import '../view/pages/Quiz/after_game_screen.dart';
 class QuestionController extends GetxController
     with SingleGetTickerProviderMixin {
   List<Option> options = [];
-  List<trueFalse> TrueFalse = [];
+  List<Option> TrueFalse = [];
 
   List rank = [];
 
@@ -134,18 +134,22 @@ class QuestionController extends GetxController
   }
 
   void checkAns(
-    Option question,
-    int selectedIndex,
-    String qName,
-  ) {
-    // because once user press any option then it will run
+      Option question,
+      int selectedIndex,
+      String qName,
+      ) {
+    // Store selected quiz name in cache
     CacheHelper.put(key: 'quiz', value: qName);
-    _isAnswered = true;
-    _correctAns = question.answer;
-    _selectedAns = selectedIndex;
-    if (_correctAns == _selectedAns) {
-      _numOfCorrectAns++;
 
+    _isAnswered = true;
+    _correctAns = question.answer; // The correct answer is stored in `answer`
+    _selectedAns = selectedIndex; // The selected answer index
+
+    // Check if the selected answer is correct
+    if (_correctAns == _selectedAns) {
+      _numOfCorrectAns++; // Increment the correct answer count if the answer is correct
+
+      // Store the score in Firestore
       FirebaseFirestore.instance
           .collection(qName)
           .doc(CacheHelper.get(key: 'uid'))
@@ -155,18 +159,14 @@ class QuestionController extends GetxController
       });
     }
 
+    // Get the ranking after checking the answer
     getRank(qName);
 
-    // It will stop the counter
+    // Stop the timer animation once the answer is selected
     _animationController!.stop();
     update();
-    if (correctAns != _selectedAns) {
-      CacheHelper.put(key: 'cAnswer', value: numOfCorrectAns);
-      Get.offAll(AfterGameScreen(
-        score: numOfCorrectAns,
-      ));
-    }
-    // Once user select an ans after 3s it will go to the next qn
+
+    // Navigate to the next screen after a short delay (3 seconds)
     Future.delayed(Duration(seconds: 3), () {
       nextQuestion();
     });
@@ -174,26 +174,21 @@ class QuestionController extends GetxController
 
   void nextQuestion() {
     if (_questionNumber != options.length) {
-      _isAnswered = false;
+      _isAnswered = false; // Reset the answer status for the next question
+
+      // Move to the next page (question)
       _pageController!
           .nextPage(duration: Duration(milliseconds: 250), curve: Curves.ease);
 
-      // Reset the counter
+      // Reset the timer animation for the next question
       _animationController!.reset();
-
-      // Then start it again
-      // Once timer is finish go to the next
-      _animationController!.forward().whenComplete(nextQuestion).then((value) => Get.offAll(AfterGameScreen(
-        score: numOfCorrectAns,
-      )));
+      _animationController!.forward().whenComplete(nextQuestion);
     } else {
-      // Get package provide us simple way to naviigate another page
+      // All questions have been answered, navigate to the results screen
       if (numOfCorrectAns >= options.length) {
         Get.offAll(AfterGameScreen(score: numOfCorrectAns));
-      }else {
-        Get.offAll(AfterGameScreen(
-          score: numOfCorrectAns,
-        ));
+      } else {
+        Get.offAll(AfterGameScreen(score: numOfCorrectAns));
       }
     }
   }

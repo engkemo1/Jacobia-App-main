@@ -53,15 +53,19 @@ class ProfileView extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 10),
-                child: Text(
-                  CacheHelper.get(key: 'name') == null
-                      ? ''
-                      : CacheHelper.get(key: 'name'),
-                  style: TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.w500,
+              Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 10),
+                  child: Text(
+                    CacheHelper.get(key: 'name') == null
+                        ? ''
+                        : CacheHelper.get(key: 'name'),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),

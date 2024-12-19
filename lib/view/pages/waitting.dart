@@ -9,7 +9,7 @@ import 'Quiz/quiz_screen.dart';
 class Waiting extends StatefulWidget {
   const Waiting({Key? key, required this.name, required this.list, required this.id, required this.dateTime}) : super(key: key);
   final String name;
-  final List list;
+  final List<dynamic> list;
   final String id;
  final  DateTime  dateTime;
 

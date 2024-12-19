@@ -25,7 +25,6 @@ class iconswidget extends StatelessWidget {
                   width: 60,
                   height: 60,
                   decoration: BoxDecoration(
-                      color:  Colors.black12,
                     shape: BoxShape.rectangle// 0xFF17334E
                   ),
                   child:child

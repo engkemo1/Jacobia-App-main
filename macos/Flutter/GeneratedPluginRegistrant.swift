@@ -6,16 +6,16 @@ import FlutterMacOS
 import Foundation
 
 import cloud_firestore
-import connectivity_plus_macos
+import connectivity_plus
 import file_selector_macos
 import firebase_auth
 import firebase_core
 import firebase_storage
-import network_info_plus_macos
+import network_info_plus
 import path_provider_foundation
 import rive_common
 import shared_preferences_foundation
-import sqflite
+import sqflite_darwin
 import url_launcher_macos
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {

@@ -1,224 +1,234 @@
-import 'package:date_count_down/date_count_down.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:jacobia/view/components/network_image_custome/network_image_custome.dart';
-import 'package:jacobia/view_model/CodeGetx.dart';
+import 'package:date_count_down/date_count_down.dart';
 
-import '../../../constants.dart';
 import '../../pages/Compettition/compettitionDetails.dart';
-import '../component.dart';
 import 'empty_widget.dart';
 
 class CompetitionWidget extends StatelessWidget {
-  var docs = FirebaseFirestore.instance.collection('quiz').snapshots();
+  final Stream<QuerySnapshot> competitionsStream =
+      FirebaseFirestore.instance.collection('quiz').snapshots();
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Object>(
-        stream: docs,
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: Colors.greenAccent,
-              ),
-            );
-          } else if (snapshot.data.docs.length==0) {
-            return Column(
+    return StreamBuilder<QuerySnapshot>(
+      stream: competitionsStream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(color: Colors.greenAccent),
+          );
+        }
+
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return Center(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                EmptyWidget(),
-                Text(
-              'لا يوجد مسابقات',
-              style: TextStyle(color: Colors.white),
-            ),
+                Icon(Icons.hourglass_empty, color: Colors.white, size: 80),
+                const SizedBox(height: 10),
+                const Text(
+                  'لا يوجد مسابقات',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
               ],
-            );
-          } else {
-            return ListView.builder(
-                itemCount: snapshot.data.docs.length,
+            ),
+          );
+        }
+
+        return snapshot.data!.docs.length == 0
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  EmptyWidget(),
+                  Text(
+                    'لا يوجد تتائج حاليا',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              )
+            : ListView.builder(
+                itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
-                  var snap = snapshot.data.docs;
+                  final doc = snapshot.data!.docs[index];
+                  final startTime =
+                      DateTime.parse('${doc['date']} ${doc['startTime']}');
+                  final endTime =
+                      DateTime.parse('${doc['date']} ${doc['EndTime']}');
 
-                  var dateTime1 = DateTime.parse(
-                      '${snap[index]['date']} ${snap[index]['startTime']}');
-                  var dateTime2 =
-                      '${snap[index]['date']} ${snap[index]['EndTime']}';
-                  String d =
-                      DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
-                  print(dateTime2);
-                  print(dateTime1);
-                  print(d);
+                  return
+                      // DateTime.now().isAfter(endTime)
+                      //   ? const SizedBox.shrink() // Skip expired competitions
+                      //   :
+                      GestureDetector(
+                    onTap: () => _navigateToCompetitionDetails(context, doc),
+                    child: _buildCompetitionCard(context, doc, startTime),
+                  );
+                },
+              );
+      },
+    );
+  }
 
-                  return d == dateTime2
-                      ? Text('NO DATA')
-                      : GestureDetector(
-                          onTap: () {
-                            navigatorScreen(
-                                context,
-                                CompettitionDetails(
-                                  typeCoins: snap[index]['typeCoins'],
-                                  date: snap[index]['date'],
-                                  docId: snap[index].id,
-                                  image: snap[index]['imageUrl'],
-                                  desc: snap[index]['desc'],
-                                  max: snap[index]['max'],
-                                  min: snap[index]['min'],
-                                  price: snap[index]['price'],
-                                  name: snap[index]['name'],
-                                  profit: snap[index]['profit'],
-                                  categories: snap[index]['selected'],
-                                  r1: snap[index]['Rank1'],
-                                  r2: snap[index]['Rank2'],
-                                  r3: snap[index]['Rank3'],
-                                  r4: snap[index]['Rank4'],
-                                  r5: snap[index]['Rank5'],
-                                  r6: snap[index]['Rank6'],
-                                  r7: snap[index]['Rank7'],
-                                  r8: snap[index]['Rank8'],
-                                  r9: snap[index]['Rank9'],
-                                  r10: snap[index]['Rank10'],
-                                  endTime: snap[index]['EndTime'],
-                                  startTime: snap[index]['startTime'],
-                                ));
-                          },
-                          child: Container(
+  Widget _buildCompetitionCard(
+      BuildContext context, dynamic doc, DateTime startTime) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.6),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 6,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildImageSection(doc['imageUrl'], startTime),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0,horizontal: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    doc['name'],
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ),
+                const SizedBox(height: 8),
 
-                            margin: EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: Colors.black45,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: 150,
-                                  child: Stack(
-                                    children: [
-                                      Align(
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            child: networkImageCustom(height: 150,
-                                                url: snap[index]['imageUrl'])),
-                                      ),
-                                      Container(
-                                        width: 200,
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(30),
-                                            gradient: newVv),
-                                        margin: EdgeInsets.only(
-                                            left: 10, top: 10, right: 10),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Icon(
-                                              Icons.timer_rounded,
-                                              color: Colors.black,
-                                              size: 20,
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            CountDownText(
-                                              due: dateTime1,
-                                              finishedText: "Done",
-                                              showLabel: true,
-                                              // daysTextLong: " DAYS ",
-                                              // hoursTextLong: " HOURS ",
-                                              // minutesTextLong: " MINUTES ",
-                                              // secondsTextLong: " SECONDS ",
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 15),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 10, top: 10,right: 10),
-                                  child: Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(borderRadius:BorderRadius.circular(5)
-                                    ,color: Colors.white12
-                                    ),
-                                    child: Text(
-                                      snap[index]['name'],
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.normal,
-                                          color: secondaryColor,
-                                          decoration: TextDecoration.none,
-                                          fontSize: 18),
-                                      textAlign: TextAlign.start,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0,right: 8),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        'الحصول على المركز من 1ل10',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                            decoration: TextDecoration.none,
-                                            fontSize: 14),
-                                        textAlign: TextAlign.end,
-                                      ),
-                                      Text(
-                                        ' :الهدف',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                            decoration: TextDecoration.none,
-                                            fontSize: 15),
-                                        textAlign: TextAlign.end,
-                                      ),
+                Container(color: Colors.white,height: 1,width: 100,),
+                const SizedBox(height: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      ':الهدف',
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    ),
+                    Text(
+                      'الحصول على المركز من 1ل10',
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    ),
+
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Container(color: Colors.white,height: 1,width: 100,),
+                const SizedBox(height: 8),
 
 
-                                    ],
-                                  ),
-                                ),
-                                Padding(
+                Text(
+                  'المبلغ: ${doc['price']}',
+                  style: const TextStyle(color: Colors.white),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      doc['typeCoins'],
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(width: 4),
+                    Image.asset('assets/images/coin.png', width: 20),
+                  ],
+                ),
 
-                                  padding: EdgeInsets.only(
-                                      left: 8,right: 8,bottom: 8),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                      '  ${snap[index]['typeCoins']} ',style: TextStyle(color: Colors.white),),
-                                      Image.asset(
-                                        'assets/images/coin.png',
-                                        width: 20,
-                                      ),
-                                      Text(
-                                        'المبلغ: ${snap[index]['price']} ',
-                                        style:
-                                        TextStyle(color: Colors.white),
-                                      ),
+              ],
 
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                });
-          }
-        });
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImageSection(String imageUrl, DateTime startTime) {
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+          child: Image.network(
+            errorBuilder: (context, err, s) => Image.asset(
+              "assets/images/placeholder.jpg",
+              width: 130,
+              height: 180,
+              fit: BoxFit.cover,
+            ),
+            imageUrl,
+            width: 130,
+            height: 180,
+            fit: BoxFit.cover,
+          ),
+        ),
+        Positioned(
+          top: 10,
+          left: 10,
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white.withOpacity(0.8),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.timer, color: Colors.black, size: 16),
+                const SizedBox(width: 4),
+                CountDownText(
+                  due: startTime,
+                  finishedText: "انتهى",
+                  style: const TextStyle(color: Colors.black, fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _navigateToCompetitionDetails(BuildContext context, dynamic doc) {
+    // Navigate to details screen with relevant data.
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CompettitionDetails(
+          typeCoins: doc['typeCoins'],
+          date: doc['date'],
+          docId: doc.id,
+          image: doc['imageUrl'],
+          desc: doc['desc'],
+          max: doc['max'],
+          min: doc['min'],
+          price: doc['price'],
+          name: doc['name'],
+          profit: doc['profit'],
+          categories: doc['selected'],
+          r1: doc['Rank1'],
+          r2: doc['Rank2'],
+          r3: doc['Rank3'],
+          r4: doc['Rank4'],
+          r5: doc['Rank5'],
+          r6: doc['Rank6'],
+          r7: doc['Rank7'],
+          r8: doc['Rank8'],
+          r9: doc['Rank9'],
+          r10: doc['Rank10'],
+          endTime: doc['EndTime'],
+          startTime: doc['startTime'],
+        ),
+      ),
+    );
   }
 }

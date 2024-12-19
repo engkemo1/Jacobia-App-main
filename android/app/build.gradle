@@ -32,8 +32,9 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 33
-    ndkVersion flutter.ndkVersion
+    namespace "com.app.jacobia"
+    compileSdkVersion 34
+    ndkVersion "25.1.8937393"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -53,10 +54,10 @@ android {
         applicationId "com.app.jacobia"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
-        minSdkVersion 21
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode 2
-        versionName '1.2'
+        minSdkVersion 23
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.0"
         multiDexEnabled true
 
     }
@@ -71,6 +72,7 @@ android {
     }
     buildTypes {
         release {
+
             signingConfig signingConfigs.release
         }
     }

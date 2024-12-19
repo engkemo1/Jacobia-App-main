@@ -25,7 +25,7 @@ class CompettitionDetails extends StatefulWidget {
   final String endTime;
   final String startTime;
 
-  final List categories;
+  final List<dynamic> categories;
   final int? r1, r2, r3, r4, r5, r6, r7, r8, r9, r10;
 
   const CompettitionDetails({

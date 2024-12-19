@@ -5,7 +5,7 @@ import '../../components/Quiz/body.dart';
 
 class QuizScreen extends StatelessWidget {
   final String name;
-  final List list;
+  final List<dynamic> list;
   final String id;
 
   const QuizScreen(

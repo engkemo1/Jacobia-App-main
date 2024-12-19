@@ -75,7 +75,7 @@ class _AfterGameScreenState extends State<AfterGameScreen> {
                                 "Congratulations!",
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline3
+                                    .displaySmall
                                     ?.copyWith(
                                         color: Color(0xffFFBA07),
                                         fontWeight: FontWeight.bold),
@@ -84,7 +84,7 @@ class _AfterGameScreenState extends State<AfterGameScreen> {
                                 CacheHelper.get(key: 'name'),
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline3
+                                    .displaySmall
                                     ?.copyWith(
                                         color: Colors.blue,
                                         fontWeight: FontWeight.bold),
@@ -96,7 +96,7 @@ class _AfterGameScreenState extends State<AfterGameScreen> {
                                     " ${widget.rank}",
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline3
+                                        .displaySmall
                                         ?.copyWith(
                                             color: grayTwo,
                                             fontWeight: FontWeight.bold),
@@ -132,7 +132,7 @@ class _AfterGameScreenState extends State<AfterGameScreen> {
                                             '${widget.score}',
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline5
+                                                .headlineSmall
                                                 ?.copyWith(
                                                     color: secondaryColor,
                                                     fontWeight:
@@ -142,7 +142,7 @@ class _AfterGameScreenState extends State<AfterGameScreen> {
                                             "Score",
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline5
+                                                .headlineSmall
                                                 ?.copyWith(
                                                     color: Color(0xff00B2FF),
                                                     fontWeight:
@@ -179,7 +179,7 @@ class _AfterGameScreenState extends State<AfterGameScreen> {
                                           "Next",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5
+                                              .headlineSmall
                                               ?.copyWith(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold),
@@ -207,7 +207,7 @@ class _AfterGameScreenState extends State<AfterGameScreen> {
                                         "Good luck next time!",
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline3
+                                            .displaySmall
                                             ?.copyWith(
                                                 color: Color(0xffFFBA07),
                                                 fontWeight: FontWeight.bold),
@@ -220,7 +220,7 @@ class _AfterGameScreenState extends State<AfterGameScreen> {
                                   CacheHelper.get(key: 'name'),
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline3
+                                      .displaySmall
                                       ?.copyWith(
                                           color: Colors.blue,
                                           fontWeight: FontWeight.bold),
@@ -247,7 +247,7 @@ class _AfterGameScreenState extends State<AfterGameScreen> {
                                               '${widget.score}',
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline5
+                                                  .headlineSmall
                                                   ?.copyWith(
                                                       color: secondaryColor,
                                                       fontWeight:
@@ -257,7 +257,7 @@ class _AfterGameScreenState extends State<AfterGameScreen> {
                                               "Score",
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline5
+                                                  .headlineSmall
                                                   ?.copyWith(
                                                       color: Color(0xff00B2FF),
                                                       fontWeight:
@@ -295,7 +295,7 @@ class _AfterGameScreenState extends State<AfterGameScreen> {
                                             "Next",
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline5
+                                                .headlineSmall
                                                 ?.copyWith(
                                                     color: Colors.white,
                                                     fontWeight:

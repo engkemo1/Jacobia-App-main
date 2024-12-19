@@ -6,58 +6,70 @@ import '../../../view_model/question_controller.dart';
 import 'option.dart';
 
 class QuestionCard extends StatelessWidget {
-
   final Option option;
-
   final String name;
   final String id;
 
-
-   QuestionCard({ required this.option, required this.name, required this.id});
+  const QuestionCard({
+    required this.option,
+    required this.name,
+    required this.id,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    List tfQ=['True','False'];
-    List optionsQ = [
-      option.option1.toString(),
-      option.option2.toString(),
-      option.option5.toString(),
-      option.option4.toString(),
-      option.option5.toString()
-    ];
+    // Determine question type
+    final isTrueFalse = option.type == '1';
 
+    // True/False options
+    List<String> tfQ = ['True', 'False'];
+
+    // Multiple-choice options (null-safe filtering)
+    List<String?> optionsQ = [
+      option.option1,
+      option.option2,
+      option.option3,
+      option.option4,
+      option.option5,
+    ].where((opt) => opt != null).toList();
+
+    // Inject QuestionController
     QuestionController _controller = Get.put(QuestionController());
+
     return SingleChildScrollView(
       child: Container(
         height: 700,
-        margin: EdgeInsets.symmetric(horizontal: kDefaultPadding),
-        padding: EdgeInsets.all(kDefaultPadding),
+        margin: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+        padding: const EdgeInsets.all(kDefaultPadding),
         decoration: BoxDecoration(
           color: Colors.black38,
           borderRadius: BorderRadius.circular(25),
         ),
         child: Column(
           children: [
+            // Display question text
             Text(
-              option.question.toString(), style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),
+              option.question ?? "No question provided",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            SizedBox(height: 20 / 2),
+            const SizedBox(height: 20),
 
+            // Generate true/false or multiple-choice options dynamically
             ...List.generate(
-              option.type=='options'? 5:2,
-                  (index) =>
-                  Options(
-                    index: index,
-
-                    text: option.type=='options'?optionsQ[index]:tfQ[index],
-                    press: () {_controller.checkAns(option, index,name);},
-                  ),
-            )
-
-
-
-
-
+              isTrueFalse ? tfQ.length : optionsQ.length,
+                  (index) => Options(
+                index: index,
+                text: isTrueFalse ? tfQ[index] : optionsQ[index]!,
+                press: () {
+                  _controller.checkAns(option, index, name);
+                },
+              ),
+            ),
           ],
         ),
       ),
