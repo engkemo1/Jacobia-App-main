@@ -32,7 +32,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace "com.app.jacobia"
+    namespace "com.example.jacobia"
     compileSdkVersion 34
     ndkVersion "25.1.8937393"
 
@@ -51,7 +51,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.app.jacobia"
+        applicationId "com.example.jacobia"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         minSdkVersion 23
@@ -83,7 +83,7 @@ flutter {
 }
 
 dependencies {
-
+    implementation 'com.facebook.android:facebook-login:latest.release'
     implementation platform('com.google.firebase:firebase-bom:30.3.2')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.firebase:firebase-analytics-ktx'

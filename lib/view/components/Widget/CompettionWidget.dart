@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:date_count_down/date_count_down.dart';
 
@@ -43,7 +44,7 @@ class CompetitionWidget extends StatelessWidget {
                 children: [
                   EmptyWidget(),
                   Text(
-                    'لا يوجد تتائج حاليا',
+                    'no_competitions'.tr,
                     style: TextStyle(color: Colors.white),
                   ),
                 ],
@@ -93,7 +94,7 @@ class CompetitionWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12.0,horizontal: 15),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Align(
                   alignment: Alignment.center,
@@ -110,15 +111,17 @@ class CompetitionWidget extends StatelessWidget {
                 Container(color: Colors.white,height: 1,width: 100,),
                 const SizedBox(height: 8),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      ':الهدف',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+                      '${"goal".tr}:',
+                      style: TextStyle(color: Colors.white, fontSize: 14,fontWeight: FontWeight.w500),
                     ),
-                    Text(
-                      'الحصول على المركز من 1ل10',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    SizedBox(width: 150,
+                      child: Text(
+                        'rank_condition'.tr,
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
                     ),
 
                   ],
@@ -129,12 +132,12 @@ class CompetitionWidget extends StatelessWidget {
 
 
                 Text(
-                  'المبلغ: ${doc['price']}',
+                  '${"price".tr}: ${doc['price']}',
                   style: const TextStyle(color: Colors.white),
                 ),
                 const SizedBox(height: 8),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       doc['typeCoins'],

@@ -1,4 +1,5 @@
-package com.app.jacobia
+package com.example.jacobia
+
 
 import io.flutter.embedding.android.FlutterActivity
 

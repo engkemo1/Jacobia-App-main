@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:jacobia/view/pages/Compettition/widgets/product_card.dart';
 import 'package:jacobia/view/pages/Quiz/quiz_screen.dart';
 import 'package:jacobia/view/pages/waitting.dart';
 import 'package:jacobia/view_model/database/local/cache_helper.dart';
@@ -63,25 +64,23 @@ class _CompettitionDetailsState extends State<CompettitionDetails> {
   int _index = 0;
   var enroll = Get.put(EnrollGetX());
   bool isEnrolled = false;
-  Enrolled()async{
 
+  Enrolled() async {
     await FirebaseFirestore.instance
         .collection("users")
         .doc(CacheHelper.get(key: 'uid'))
         .collection("enrolled_quiz")
         .doc(widget.docId)
-        .get().then((value) {
-      if(value.exists){
-setState(() {
-  isEnrolled=true;
-
-});
-      }else{
+        .get()
+        .then((value) {
+      if (value.exists) {
         setState(() {
-          isEnrolled=false;
-
+          isEnrolled = true;
         });
-
+      } else {
+        setState(() {
+          isEnrolled = false;
+        });
       }
     });
     print(isEnrolled);
@@ -108,6 +107,7 @@ setState(() {
     var size = MediaQuery.of(context).size;
 
     return Scaffold(
+
       body: SafeArea(
         child: Container(
           height: size.height,
@@ -240,226 +240,29 @@ setState(() {
                           const SizedBox(
                             height: 50,
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.black54,
-                            ),
-                            padding: EdgeInsets.all(20),
-                            margin: EdgeInsets.all(20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ClipRRect(
-                                  child: Image.network(widget.image),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  'Description: ${widget.desc}',
-                                  textAlign: TextAlign.start,
-                                  style: const TextStyle(
-                                      fontSize: 14,
-                                      fontFamily: 'Arial',
-                                      fontWeight: FontWeight.normal,
-                                      decoration: TextDecoration.none,
-                                      color: Colors.white),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: const [
-                                        Expanded(
-                                            child: Divider(
-                                          thickness: 2,
-                                        ))
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 0.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              const Text(
-                                                'price:  ',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12),
-                                              ),
-                                              Text(
-                                                '${widget.price}  ${widget.typeCoins} ',
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 13),
-                                              ),
-                                              Image.asset(
-                                                'assets/images/coin.png',
-                                                width: 15,
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Divider(),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 0.0),
-                                      child: Row(
-                                        children: [
-                                          const Text(
-                                            'Categories: ',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 14),
-                                          ),
-                                          Expanded(
-                                            child: Wrap(
-                                                children: List.generate(
-                                              widget.categories.length,
-                                              (index) => Text(
-                                                ' ${widget.categories[index]} ${widget.categories.lastIndex == index ? "" : ","}',
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                            )),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    Divider(),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    DataTable(
-                                      columnSpacing: 20,
-                                      headingTextStyle: TextStyle(
-                                          color: primaryColor, fontSize: 10),
-                                      dataTextStyle: TextStyle(
-                                          color: Colors.white, fontSize: 10),
-                                      headingRowColor:
-                                          MaterialStateProperty.all(
-                                              Colors.white),
-                                      border:
-                                          TableBorder.all(color: Colors.black),
-                                      rows: [
-                                        DataRow(cells: [
-                                          DataCell(Text("${widget.r1}%")),
-                                          DataCell(Text("${widget.r2}%")),
-                                          DataCell(Text("${widget.r3}%")),
-                                          DataCell(Text("${widget.r4}%")),
-                                          DataCell(Text("${widget.r5}%")),
-                                        ]),
-                                      ],
-                                      columns: const [
-                                        DataColumn(
-                                          label: Center(
-                                            child: Text(
-                                              'Rank1',
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Text(
-                                            'Rank2',
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Text(
-                                            'Rank3',
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Text(
-                                            'Rank4',
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Text(
-                                            'Rank5',
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    DataTable(
-                                      columnSpacing: 20,
-                                      headingTextStyle: TextStyle(
-                                          color: primaryColor, fontSize: 10),
-                                      dataTextStyle: TextStyle(
-                                          color: Colors.white, fontSize: 10),
-                                      headingRowColor:
-                                          MaterialStateProperty.all(
-                                              Colors.white),
-                                      border:
-                                          TableBorder.all(color: Colors.black),
-                                      rows: [
-                                        DataRow(cells: [
-                                          DataCell(Text("${widget.r6}%")),
-                                          DataCell(Text("${widget.r7}%")),
-                                          DataCell(Text("${widget.r8}%")),
-                                          DataCell(Text("${widget.r9}%")),
-                                          DataCell(Text("${widget.r10}%")),
-                                        ]),
-                                      ],
-                                      columns: const [
-                                        DataColumn(
-                                          label: Text(
-                                            'Rank6',
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Text(
-                                            'Rank7',
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Text(
-                                            'Rank8',
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Text(
-                                            'Rank9',
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Text(
-                                            'Rank10',
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
+                          ProductCard(
+                            image: widget.image,
+                            description: widget.desc,
+                            amount: widget.price,
+                            currency: widget.typeCoins,
+                            categories: widget.categories,
+                            ranks: [
+                              widget.r1,
+                              widget.r2,
+                              widget.r3,
+                              widget.r4,
+                              widget.r5,
+                              widget.r6,
+                              widget.r7,
+                              widget.r8,
+                              widget.r9,
+                              widget.r10
+                            ],
                           ),
-                          const Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
+                           Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
                             child: Text(
-                              'How can i join',
+                              'how_can_i_join'.tr,
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                   fontSize: 20,
@@ -499,7 +302,7 @@ setState(() {
                                   },
                                   steps: <Step>[
                                     Step(
-                                      title: const Text('Step 1 '),
+                                      title:  Text('step_1'.tr,style: TextStyle(fontWeight: FontWeight.w600),),
                                       content: Container(
                                           alignment: Alignment.centerLeft,
                                           child: Row(
@@ -508,8 +311,8 @@ setState(() {
                                             children: [
                                               Row(
                                                 children: [
-                                                  const Text(
-                                                      'Join The Callenge'),
+                                                   Text(
+                                                      'join_the_challenge'.tr),
                                                   const SizedBox(
                                                     width: 5,
                                                   ),
@@ -526,10 +329,10 @@ setState(() {
                                             ],
                                           )),
                                     ),
-                                    const Step(
-                                      title: Text('Step 2'),
+                                     Step(
+                                      title: Text('step_2'.tr,style: TextStyle(fontWeight: FontWeight.w600),),
                                       content: Text(
-                                          'you should be in rank1 to 10 to win '),
+                                          'rank_condition'.tr),
                                     ),
                                   ],
                                 ),
@@ -558,18 +361,18 @@ setState(() {
                                                         BorderRadius.circular(
                                                             20)),
                                                 title:
-                                                    const Text('Are you sure'),
+                                                     Text('are_you_sure'.tr),
                                                 content: SingleChildScrollView(
                                                   child: ListBody(
                                                     children: <Widget>[
                                                       Text(
-                                                          'Your Balance will reduce ${widget.price}'),
+                                                          '${"enrollment_warning".tr} ${widget.price}'),
                                                     ],
                                                   ),
                                                 ),
                                                 actions: <Widget>[
                                                   TextButton(
-                                                      child: const Text('Yes'),
+                                                      child:  Text('yes'.tr),
                                                       onPressed: () {
                                                         enroll
                                                             .enroll(
@@ -589,7 +392,7 @@ setState(() {
                                                         Navigator.pop(context);
                                                       }),
                                                   TextButton(
-                                                    child: const Text('No'),
+                                                    child:  Text('no'.tr),
                                                     onPressed: () {
                                                       Navigator.pop(context);
                                                     },
@@ -599,13 +402,13 @@ setState(() {
                                             },
                                           );
                                         } else {
-                                          Get.snackbar('!تنبيه',
-                                              'انتهى وقت الانضمام للمسابقة ');
+                                          Get.snackbar('warning'.tr, 'join_time_ended'.tr,backgroundColor: Colors.white);
+
                                         }
                                       },
                                       child: dateNow.isBefore(startDate)
-                                          ? Text('Enroll')
-                                          : Text('Done'))
+                                          ? Text('enroll'.tr)
+                                          : Text('done'.tr))
                                   : ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                           backgroundColor:
@@ -619,7 +422,7 @@ setState(() {
                                         if (endDate.isAfter(dateNow)) {
                                           if (startDate.isAfter(dateNow)) {
                                             Get.snackbar(
-                                                '!تنبيه', 'لم تبدأ بعد');
+                                                'warning'.tr, 'not_started'.tr);
                                           } else {
                                             bool isJoined = false;
                                             await FirebaseFirestore.instance
@@ -660,18 +463,18 @@ setState(() {
                                                 dateTime: endDate,
                                               ));
                                             } else {
-                                              Get.snackbar('!تنبيه',
-                                                  'لقد انضميت من قبل بالفعل');
+                                              Get.snackbar('warning'.tr,
+                                                  "already_joined".tr,backgroundColor: Colors.white);
                                             }
                                           }
                                         } else {
-                                          Get.snackbar('!تنبيه',
-                                              'انتهى وقت الانضمام للمسابقة ');
+                                          Get.snackbar('warning'.tr,'join_time_ended'.tr
+                                              ,backgroundColor: Colors.white);
                                         }
                                       },
                                       child: dateNow.isAfter(endDate)
-                                          ? Text('Done')
-                                          : Text('Start'))),
+                                          ? Text('done'.tr)
+                                          : Text('start'.tr))),
                           const SizedBox(
                             height: 20,
                           )

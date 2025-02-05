@@ -49,6 +49,8 @@ class _EditInfoState extends State<EditInfo> {
     nationalityController = TextEditingController();
   }
 
+  // Existing code
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +58,7 @@ class _EditInfoState extends State<EditInfo> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          'البيانات',
+          'profile'.tr, // Use .tr for translation
           style: TextStyle(color: Colors.grey, fontSize: 20),
         ),
       ),
@@ -78,7 +80,6 @@ class _EditInfoState extends State<EditInfo> {
 
             var userData = snapshot.data!.data() as Map<String, dynamic>;
 
-            // Set text controllers with Firestore data
             nameController.text = userData['name'] ?? '';
             passController.text = userData['password'] ?? '';
             numController.text = userData['phone'] ?? '';
@@ -101,11 +102,14 @@ class _EditInfoState extends State<EditInfo> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          Text("account_creation_date".tr, // Translated text
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 18)),
                           Text(
-                            userData['createdAt'] ?? 'N/A', // Example createdAt field
+                            userData['createdAt'] ?? 'N/A',
                             style: TextStyle(color: Colors.white, fontSize: 18),
                           ),
-                          Text(":تاريخ انشاء الحساب", style: TextStyle(color: Colors.white, fontSize: 18)),
+
                         ],
                       ),
                     ),
@@ -113,7 +117,6 @@ class _EditInfoState extends State<EditInfo> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // User image or default avatar
                         imageFile != null
                             ? CircleAvatar(
                           radius: 100,
@@ -132,9 +135,9 @@ class _EditInfoState extends State<EditInfo> {
                         )),
                         InkWell(
                           onTap: () async {
-                            // Image picker logic here
                             final ImagePicker _picker = ImagePicker();
-                            final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+                            final pickedFile = await _picker.pickImage(
+                                source: ImageSource.gallery);
                             if (pickedFile != null) {
                               setState(() {
                                 imageFile = File(pickedFile.path);
@@ -145,60 +148,98 @@ class _EditInfoState extends State<EditInfo> {
                         ),
                       ],
                     ),
-                    // Fields for user data
-                    _buildTextField('الاسم', nameController),
+                    _buildTextField('name'.tr, nameController),
+                    // Use .tr here
                     Divider(color: Colors.grey, thickness: 1),
-                    _buildTextField('الكنية', nickController),
+                    _buildTextField('nickname'.tr, nickController),
+                    // Use .tr here
                     Divider(color: Colors.grey, thickness: 1),
-                    _buildTextField('رقم الواتساب', numController),
+                    _buildTextField('whatsapp_number'.tr, numController),
+                    // Use .tr here
                     Divider(color: Colors.grey, thickness: 1),
-                    _buildTextField('مكان الاقامة', addressController),
+                    _buildTextField('address'.tr, addressController),
+                    // Use .tr here
                     Divider(color: Colors.grey, thickness: 1),
-                    _buildTextField('الجنسية', nationalityController),
+                    _buildTextField('nationality'.tr, nationalityController),
+                    // Use .tr here
                     Divider(color: Colors.grey, thickness: 1),
-                    _buildTextField('البريد الالكتروني', emailController),
+                    _buildTextField('email'.tr, emailController),
+                    // Use .tr here
                     Divider(color: Colors.grey, thickness: 1),
-                    _buildTextField('الرقم السري', passController),
+                    _buildTextField('password'.tr, passController),
+                    // Use .tr here
                     SizedBox(
                       width: 200,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue, // Set the background color
+                          backgroundColor: Colors.blue,
                         ),
                         onPressed: () async {
                           String picUrl = '';
 
                           if (imageFile != null) {
                             String _fileName = basename(imageFile!.path);
-                            Reference _firebaseStorageRef = FirebaseStorage.instance
+                            Reference _firebaseStorageRef = FirebaseStorage
+                                .instance
                                 .ref()
                                 .child('profilePics/$_fileName');
 
-                            UploadTask _uploadTask = _firebaseStorageRef.putFile(imageFile!);
-                            picUrl = await (await _uploadTask).ref.getDownloadURL();
+                            UploadTask _uploadTask = _firebaseStorageRef
+                                .putFile(imageFile!);
+                            picUrl =
+                            await (await _uploadTask).ref.getDownloadURL();
                           }
 
-                          // Update Firestore with the new data
-                          await FirebaseFirestore.instance.collection('users').doc(_user?.uid).update({
-                            'imageUrl': picUrl.isNotEmpty ? picUrl : userData['imageUrl'],
+                          await FirebaseFirestore.instance.collection('users')
+                              .doc(_user?.uid).update({
+                            'imageUrl': picUrl.isNotEmpty
+                                ? picUrl
+                                : userData['imageUrl'],
                             'name': nameController.text,
                             'phone': numController.text,
                             'nick': nickController.text,
                             'nationality': nationalityController.text,
                             'address': addressController.text,
-                          }).then((value) {
-                            Get.snackbar('', 'Successfully updated');
-                            CacheHelper.put(key: 'imageUrl', value: picUrl.isNotEmpty ? picUrl : userData['imageUrl']);
-                            CacheHelper.put(key: 'name', value: nameController.text.isNotEmpty ? nameController.text : CacheHelper.get(key: 'name'));
-                            CacheHelper.put(key: 'phone', value: numController.text.isNotEmpty ? numController.text : CacheHelper.get(key: 'phone'));
-                            CacheHelper.put(key: 'nick', value: nickController.text.isNotEmpty ? nickController.text : CacheHelper.get(key: 'nick'));
-                            CacheHelper.put(key: 'nationality', value: nationalityController.text.isNotEmpty ? nationalityController.text : CacheHelper.get(key: 'nationality'));
-                            CacheHelper.put(key: 'address', value: addressController.text.isNotEmpty ? addressController.text : CacheHelper.get(key: 'address'));
-                            CacheHelper.put(key: 'email', value: emailController.text.isNotEmpty ? emailController.text : CacheHelper.get(key: 'email'));
-                            CacheHelper.put(key: 'password', value: passController.text.isNotEmpty ? passController.text : CacheHelper.get(key: 'password'));
+                          })
+                              .then((value) {
+                            Get.snackbar('',
+                                backgroundColor: Colors.white,
+                                'successfully_updated'.tr); // Translated text
+                            CacheHelper.put(key: 'imageUrl',
+                                value: picUrl.isNotEmpty
+                                    ? picUrl
+                                    : userData['imageUrl']);
+                            CacheHelper.put(key: 'name',
+                                value: nameController.text.isNotEmpty
+                                    ? nameController.text
+                                    : CacheHelper.get(key: 'name'));
+                            CacheHelper.put(key: 'phone',
+                                value: numController.text.isNotEmpty
+                                    ? numController.text
+                                    : CacheHelper.get(key: 'phone'));
+                            CacheHelper.put(key: 'nick',
+                                value: nickController.text.isNotEmpty
+                                    ? nickController.text
+                                    : CacheHelper.get(key: 'nick'));
+                            CacheHelper.put(key: 'nationality',
+                                value: nationalityController.text.isNotEmpty
+                                    ? nationalityController.text
+                                    : CacheHelper.get(key: 'nationality'));
+                            CacheHelper.put(key: 'address',
+                                value: addressController.text.isNotEmpty
+                                    ? addressController.text
+                                    : CacheHelper.get(key: 'address'));
+                            CacheHelper.put(key: 'email',
+                                value: emailController.text.isNotEmpty
+                                    ? emailController.text
+                                    : CacheHelper.get(key: 'email'));
+                            CacheHelper.put(key: 'password',
+                                value: passController.text.isNotEmpty
+                                    ? passController.text
+                                    : CacheHelper.get(key: 'password'));
                           });
                         },
-                        child: Text('Save'),
+                        child: Text('save'.tr,style: TextStyle(color: Colors.white),), // Translated text
                       ),
                     ),
                   ],
@@ -210,29 +251,29 @@ class _EditInfoState extends State<EditInfo> {
       ),
     );
   }
+}
 
-  Widget _buildTextField(String label, TextEditingController controller) {
-    return Container(
-      height: 80,
-      child: ListTile(
-        trailing: Text(
-          ': $label',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Montserrat',
-            fontSize: 18,
-            color: const Color(0xff00334a),
-            height: 1.58,
-          ),
-        ),
-        subtitle: TextFormField(
-          controller: controller,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            border: InputBorder.none,
-          ),
+Widget _buildTextField(String label, TextEditingController controller) {
+  return Container(
+    height: 80,
+    child: ListTile(
+      leading: Text(
+        '$label:',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Montserrat',
+          fontSize: 18,
+          color: const Color(0xff00334a),
+          height: 1.58,
         ),
       ),
-    );
-  }
+      subtitle: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          border: InputBorder.none,
+        ),
+      ),
+    ),
+  );
 }

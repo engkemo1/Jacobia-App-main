@@ -190,15 +190,13 @@ class Competition extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(left: 20, right: 20),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              'المسابقات',
+                              'competitions'.tr,
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white),
-                              textAlign: TextAlign.end,
                             )
                           ],
                         ),

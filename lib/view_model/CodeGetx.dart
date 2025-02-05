@@ -117,25 +117,37 @@ class CodesGetX extends GetxController with SingleGetTickerProviderMixin {
       Get.defaultDialog(title: '', content: Text('الكود غير صحيح'));
   }
 
-  request() async {
-
-    await FirebaseFirestore.instance
-        .collection('requests')
-        .doc()
-        .set({
-      'name': CacheHelper.get(key: 'name'),
-      'phone': CacheHelper.get(key: 'phone'),
-      'uid': CacheHelper.get(key: 'uid'),
-      'withdrawal':double.tryParse(priceController.text),
-      'typeCoins': typeCoins,
-      'redCoins': CacheHelper.get(key: 'redCoins'),
-      'greenCoins': CacheHelper.get(key: 'greenCoins'),
-      'yellowCoins': CacheHelper.get(key: 'yellowCoins'),
-    }).then((value) {
-      Get.back();
+  request(double totalCoins) async {
+    if (totalCoins == 0 ||
+        totalCoins == 0.0 ||
+        totalCoins < double.parse(priceController.text)) {
+      print(totalCoins);
+      print(totalCoins);
       Get.snackbar(
-          '                              كيف حالك', '                 لقد تم ارسال الطلب في انتظار الموافقه',
-          duration: Duration(seconds: 5),);
-    });
+        backgroundColor: Colors.white,
+        '                              تحذير',
+        '                 لا بوجد لديك عملات للسحب',
+        duration: Duration(seconds: 5),
+      );
+    } else {
+      await FirebaseFirestore.instance.collection('requests').doc().set({
+        'name': CacheHelper.get(key: 'name'),
+        'phone': CacheHelper.get(key: 'phone'),
+        'uid': CacheHelper.get(key: 'uid'),
+        'withdrawal': double.tryParse(priceController.text),
+        'typeCoins': typeCoins,
+        'redCoins': CacheHelper.get(key: 'redCoins'),
+        'greenCoins': CacheHelper.get(key: 'greenCoins'),
+        'yellowCoins': CacheHelper.get(key: 'yellowCoins'),
+      }).then((value) {
+        Get.back();
+        Get.snackbar(
+          backgroundColor: Colors.white,
+          '                              كيف حالك',
+          '                 لقد تم ارسال الطلب في انتظار الموافقة',
+          duration: Duration(seconds: 5),
+        );
+      });
+    }
   }
 }

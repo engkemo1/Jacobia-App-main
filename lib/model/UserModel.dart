@@ -8,7 +8,7 @@ class UserModel {
   final String? phone;
   final String? nick;
   final String? pass;
-  final String? date;
+  final String? createdAt;
 
   final String? nationality;
   final String? address;
@@ -18,7 +18,7 @@ class UserModel {
 
   UserModel(
     {
-      required  this.date,
+      required  this.createdAt,
     required this.pass,
     required this.greenCoins,
     required this.redCoins,
@@ -36,7 +36,7 @@ class UserModel {
   Map<String, dynamic> toJson() => {
         'password': pass,
         "name": name,
-        'date': pass,
+        'createdAt': createdAt,
         "imageUrl": profilePhoto,
         "email": email,
         "uid": uid,
@@ -53,7 +53,7 @@ class UserModel {
     var snapshot = snap.data() as Map<String, dynamic>;
     return UserModel(
       pass: snapshot['password'],
-      date: snapshot['date'],
+      createdAt: snapshot['createdAt'],
       email: snapshot['email'],
       profilePhoto: snapshot['profilePhoto'],
       uid: snapshot['uid'],
