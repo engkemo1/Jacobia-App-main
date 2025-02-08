@@ -73,6 +73,7 @@ class CodesGetX extends GetxController with SingleGetTickerProviderMixin {
           double red = CacheHelper.get(key: 'redCoins') ?? 0;
           double yellow = CacheHelper.get(key: 'yellowCoins') ?? 0;
           double green = CacheHelper.get(key: 'greenCoins') ?? 0;
+          double blue = CacheHelper.get(key: 'blueCoins') ?? 0;
 
           FirebaseFirestore.instance
               .collection('users')
@@ -86,10 +87,16 @@ class CodesGetX extends GetxController with SingleGetTickerProviderMixin {
             'yellowCoins': element.typeCoins == 'yellowCoins'
                 ? yellow + element.price!
                 : yellow,
+            'blueCoins': element.typeCoins == 'yellowCoins'
+                ? blue + element.price!
+                : blue,
           }).then((value) {
             element.typeCoins == 'redCoins'
                 ? CacheHelper.put(key: 'redCoins', value: red + element.price!)
                 : red;
+            element.typeCoins == 'blueCoins'
+                ? CacheHelper.put(key: 'blueCoins', value: blue + element.price!)
+                : blue;
             element.typeCoins == 'greenCoins'
                 ? CacheHelper.put(
                     key: 'greenCoins', value: green + element.price!)
@@ -139,6 +146,7 @@ class CodesGetX extends GetxController with SingleGetTickerProviderMixin {
         'redCoins': CacheHelper.get(key: 'redCoins'),
         'greenCoins': CacheHelper.get(key: 'greenCoins'),
         'yellowCoins': CacheHelper.get(key: 'yellowCoins'),
+        'blueCoins': CacheHelper.get(key: 'blueCoins'),
       }).then((value) {
         Get.back();
         Get.snackbar(

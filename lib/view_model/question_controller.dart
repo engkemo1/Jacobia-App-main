@@ -65,7 +65,7 @@ class QuestionController extends GetxController
   getTotal(String docId) async {
    await FirebaseFirestore.instance
         .collection('total')
-        .doc('rkzeowmckDm2xJQ1PhTo')
+        .doc(docId)
         .get().then((value) {
       total=value.get('total');
       print(total);

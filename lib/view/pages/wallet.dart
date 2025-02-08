@@ -22,6 +22,7 @@ class Wallet extends GetView<CodesGetX> {
     'redCoins',
     'greenCoins',
     'yellowCoins',
+    'blueCoins'
   ];
 
   @override
@@ -309,11 +310,13 @@ class Wallet extends GetView<CodesGetX> {
                                                         children: [
                                                           SizedBox(height: 10),
                                                           InputField(
+                                                            contentPadding: EdgeInsets.symmetric(horizontal: 10),
                                                             isEnabled: false,
                                                             hint: '${typeCoin.toString()}',
                                                             controller: typeCoins,
                                                             label: 'selectCoins'.tr, // Localized "اختر العملة" or "Select Coins"
                                                             iconOrdrop: 'drop',
+
                                                             widget: DropdownButton(
                                                               items: coinsList
                                                                   .map<DropdownMenuItem<String>>((value) =>
@@ -404,11 +407,24 @@ class Wallet extends GetView<CodesGetX> {
                                     SizedBox(
                                       height: he * 0.02,
                                     ),
+
                                     historywallet(
                                       images: "assets/icons/egp.png",
                                       title: "currencyYellow".tr, // Use translation key
                                       money: "${snap[0]['yellowCoins']}",
                                       name: 'egyptianCurrency'.tr, // Use translation key
+                                    ),
+                                    SizedBox(
+                                      height: he * 0.02,
+                                    ),
+                                    historywallet(
+                                      images: "assets/icons/usd-coin.png",
+                                      title: "currencyBlue".tr, // Use translation key
+                                      money: "${snap[0]['blueCoins']}",
+                                      name: 'dollarCurrency'.tr, // Use translation key
+                                    ),
+                                    SizedBox(
+                                      height: he * 0.02,
                                     ),
                                   ],
                                 )

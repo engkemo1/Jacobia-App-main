@@ -53,6 +53,8 @@
   "syrianCurrency": "Syrian Currency",
   "lebaneseCurrency": "Lebanese Currency",
   "egyptianCurrency": "Egyptian Currency",
+  "currencyBlue": "Blue Currency",
+  "dollarCurrency": "Dollar Currency",
 
   "deposit": "Deposit",
   "withdraw": "Withdraw",

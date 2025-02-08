@@ -11,7 +11,7 @@ class InputField extends StatefulWidget {
         required this.hint,
         this.widget,
         required this.iconOrdrop,
-        required this.isEnabled, required this.texth,  this.textInputType, this.code=false})
+        required this.isEnabled, required this.texth,  this.textInputType, this.code=false, this.contentPadding})
       : super(key: key);
   final String label;
   final TextEditingController? controller;
@@ -22,6 +22,7 @@ class InputField extends StatefulWidget {
   final bool isEnabled;
   final double texth;
   final bool code;
+  final EdgeInsetsGeometry? contentPadding;
 
   final TextInputType? textInputType;
 
@@ -62,7 +63,9 @@ class _InputFieldState extends State<InputField> {
           },
           cursorColor:  Colors.white,
           style: TextStyle(color:  Colors.white,fontWeight: FontWeight.normal),
+
           decoration: InputDecoration(
+            contentPadding:widget.contentPadding ,
             suffixIcon: widget.iconOrdrop == 'icon'
                 ? Icon(
               widget.icondata,

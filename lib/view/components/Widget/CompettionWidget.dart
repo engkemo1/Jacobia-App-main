@@ -177,7 +177,7 @@ class CompetitionWidget extends StatelessWidget {
         ),
         Positioned(
           top: 10,
-          left: 10,
+          left: 10,right: 10,
           child: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
@@ -190,7 +190,7 @@ class CompetitionWidget extends StatelessWidget {
                 const SizedBox(width: 4),
                 CountDownText(
                   due: startTime,
-                  finishedText: "انتهى",
+                  finishedText: "done".tr,
                   style: const TextStyle(color: Colors.black, fontSize: 12),
                 ),
               ],

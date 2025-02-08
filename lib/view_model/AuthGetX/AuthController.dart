@@ -138,6 +138,7 @@ class AuthController extends GetxController {
           greenCoins: 0,
           redCoins: 0,
           yellowCoins: 0,
+          blueCoins: 0,
         );
         await FirebaseFirestore.instance.collection('users').doc(user.uid).set(newUser.toJson());
         _saveUser(newUser);
@@ -165,6 +166,7 @@ class AuthController extends GetxController {
     CacheHelper.put(key: 'redCoins', value: user.redCoins);
     CacheHelper.put(key: 'yellowCoins', value: user.yellowCoins);
     CacheHelper.put(key: 'greenCoins', value: user.greenCoins);
+    CacheHelper.put(key: 'blueCoins', value: user.blueCoins);
   }
 
   void getCoins() {
@@ -173,6 +175,7 @@ class AuthController extends GetxController {
       CacheHelper.put(key: 'redCoins', value: value.get('redCoins'));
       CacheHelper.put(key: 'greenCoins', value: value.get('greenCoins'));
       CacheHelper.put(key: 'yellowCoins', value: value.get('yellowCoins'));
+      CacheHelper.put(key: 'blueCoins', value: value.get('blueCoins'));
       CacheHelper.put(key: 'uid', value: value.get('uid'));
     });
   }
@@ -193,6 +196,7 @@ class AuthController extends GetxController {
         greenCoins: 0,
         redCoins: 0,
         yellowCoins: 0,
+      blueCoins: 0,
       );
       await FirebaseFirestore.instance.collection('users').doc(cred.user!.uid).set(user.toJson());
       _saveUser(user);

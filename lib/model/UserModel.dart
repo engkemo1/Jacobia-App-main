@@ -15,6 +15,7 @@ class UserModel {
   final double? greenCoins;
   final double? redCoins;
   final double? yellowCoins;
+  final double? blueCoins;
 
   UserModel(
     {
@@ -23,6 +24,7 @@ class UserModel {
     required this.greenCoins,
     required this.redCoins,
     required this.yellowCoins,
+    required this.blueCoins,
     required this.name,
     required this.email,
     required this.uid,
@@ -46,7 +48,8 @@ class UserModel {
         'address': address,
         'redCoins': redCoins,
         'greenCoins': greenCoins,
-        'yellowCoins': yellowCoins
+        'yellowCoins': yellowCoins,
+        'blueCoins': blueCoins
       };
 
   static UserModel fromSnap(DocumentSnapshot snap) {
@@ -65,6 +68,7 @@ class UserModel {
       greenCoins: snapshot['greenCoins'],
       redCoins: snapshot['redCoins'],
       yellowCoins: snapshot['yellowCoins'],
+      blueCoins: snapshot['blueCoins'],
     );
   }
 }
