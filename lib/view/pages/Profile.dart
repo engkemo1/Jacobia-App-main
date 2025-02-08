@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:jacobia/constants.dart';
 import 'package:jacobia/core/localization/app_localization.dart';
@@ -12,73 +13,147 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(gradient: newVv),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+    final String uid = CacheHelper.get(key: 'uid') ?? '';
+    final String name = CacheHelper.get(key: 'name') ?? '';
+    final String email = CacheHelper.get(key: 'email') ?? '';
+    final String imageUrl = CacheHelper.get(key: 'imageUrl') ?? '';
+
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: SizedBox(
+          height: double.infinity,
+
+          child: Stack(
             children: [
-              const SizedBox(height: 30),
-
-              /// Profile Picture
-              CircleAvatar(
-                radius: 60,
-                backgroundImage: CacheHelper.get(key: 'imageUrl') == null
-                    ? const AssetImage('assets/icons/logo.png')
-                    : NetworkImage(CacheHelper.get(key: 'imageUrl')) as ImageProvider,
-              ),
-
-              /// Name
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 10),
-                child: Text(
-                  CacheHelper.get(key: 'name') ?? '',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 36, fontWeight: FontWeight.w500),
+              /// **Background with Blur Effect**
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [primaryColor.withOpacity(0.7), Colors.blueGrey.shade900],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
                 ),
               ),
 
-              /// Email
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.black26),
-                child: Text(
-                  CacheHelper.get(key: 'email') ?? '',
-                  style: const TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.normal),
-                ),
-              ),
-
-              SizedBox(height: MediaQuery.of(context).size.height * 0.07),
-
-              /// Options Box
-              Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.black54),
-                margin: const EdgeInsets.symmetric(horizontal: 15),
-                height: MediaQuery.of(context).size.height * 0.4,
+              /// **Main Content**
+              SingleChildScrollView(
                 child: Column(
                   children: [
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.07),
+                    const SizedBox(height: 40),
 
-                    buildListTile(
-                      text: "profile".tr,
-                      icon: Icons.arrow_forward_ios_sharp,
-                      onTap: () => navigatorScreen(context, EditInfo()),
+                    /// **Profile Picture with Glow Effect**
+                    Container(
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.blueAccent.withOpacity(0.5),
+                            blurRadius: 25,
+                            spreadRadius: 3,
+                          ),
+                        ],
+                      ),
+                      child: CircleAvatar(
+                        radius: 60,
+                        backgroundColor: Colors.white.withOpacity(0.2),
+                        backgroundImage: imageUrl.isEmpty
+                            ? const AssetImage('assets/icons/logo.png')
+                            : NetworkImage(imageUrl) as ImageProvider,
+                      ),
                     ),
 
-                    buildLanguageDropdown(),
+                    const SizedBox(height: 20),
 
-                    buildListTile(
-                      text: "logout".tr,
-                      icon: Icons.logout,
-                      iconColor: Colors.red,
-                      onTap: () => controller.signout(),
+                    /// **User Name**
+                    Text(
+                      name,
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: 1.2,
+                      ),
                     ),
 
-                    const Spacer(),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12),
+
+                    /// **UID with Copy Button**
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            uid,
+                            style: TextStyle(fontSize: 14, color: Colors.white70),
+                          ),
+                          const SizedBox(width: 8),
+                          GestureDetector(
+                            onTap: () {
+                              Clipboard.setData(ClipboardData(text: uid));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("Copied to clipboard")),
+                              );
+                            },
+                            child: Icon(Icons.copy, size: 18, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    /// **Email Display**
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.white10,
+                      ),
+                      child: Text(email, style: TextStyle(fontSize: 15, color: Colors.white70)),
+                    ),
+
+                    const SizedBox(height: 40),
+
+                    /// **Options Card with Glassmorphism Effect**
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white.withOpacity(0.1),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.white.withOpacity(0.05),
+                            blurRadius: 10,
+                            spreadRadius: 1,
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          buildListTile(
+                            text: "profile".tr,
+                            icon: Icons.person,
+                            onTap: () => navigatorScreen(context, EditInfo()),
+                          ),
+                          Divider(color: Colors.white24),
+                          buildLanguageDropdown(),
+                          Divider(color: Colors.white24),
+                          buildListTile(
+                            text: "logout".tr,
+                            icon: Icons.logout,
+                            iconColor: Colors.red,
+                            onTap: () => controller.signout(),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -89,37 +164,52 @@ class ProfileView extends StatelessWidget {
     );
   }
 
-  /// Reusable Function for ListTile
+  /// **List Tile with Neon Glow**
   Widget buildListTile({required String text, required IconData icon, Color iconColor = Colors.white, required VoidCallback onTap}) {
-    return ListTile(
-        leading: Text(text, style: const TextStyle(fontSize: 19, color: Colors.white)),
-      trailing: Icon(icon, color: iconColor),
+    return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              text,
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+            Container(
+              padding: EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.2),
+              ),
+              child: Icon(icon, color: iconColor),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  /// Language Selector Dropdown
+  /// **Language Dropdown with Modern Design**
   Widget buildLanguageDropdown() {
     return ListTile(
-      leading: Text("language".tr, style: const TextStyle(fontSize: 19, color: Colors.white)),
+      leading: Text("language".tr, style: TextStyle(fontSize: 18, color: Colors.white)),
       trailing: DropdownButton<String>(
-        isExpanded: false,
-        elevation: 0,
-        dropdownColor: Colors.black,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        icon: const Icon(Icons.language, color: Colors.white),
-        underline: const SizedBox(),
+        dropdownColor: Colors.black87,
+        icon: Icon(Icons.language, color: Colors.white),
+        underline: SizedBox(),
         value: Get.locale?.languageCode ?? 'en',
         onChanged: (String? languageCode) {
           if (languageCode != null) {
             Get.updateLocale(Locale(languageCode));
             AppLocalization.saveLanguage(languageCode);
-            // ✅ Updates language instantly
           }
         },
-        items: const [
-          DropdownMenuItem(value: "en", child: Text("English ", style: TextStyle(color: Colors.white))),
-          DropdownMenuItem(value: "ar", child: Text(" العربية", style: TextStyle(color: Colors.white))),
+        items: [
+          DropdownMenuItem(value: "en", child: Text("English", style: TextStyle(color: Colors.white))),
+          DropdownMenuItem(value: "ar", child: Text("العربية", style: TextStyle(color: Colors.white))),
         ],
       ),
     );
